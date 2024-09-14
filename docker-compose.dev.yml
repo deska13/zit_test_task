@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  product_db:
+    ports:
+      - 5432:5432
+
+  product_api:
+    volumes:
+      - ${PWD}/src:/app/src
+    ports:
+      - 8000:8000
+
+volumes:
+  pgdata:

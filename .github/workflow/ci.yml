@@ -1,0 +1,30 @@
+name: Release workflow 🔥
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Check code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Poetry env
+        uses: snok/install-poetry@v1
+
+      - name: Installing Dependencies
+        run: poetry install --all-extras
+
+      - name: Code formatting
+        run: make format-lint
+
+      # - name: Testing
+      #   run: make tests
