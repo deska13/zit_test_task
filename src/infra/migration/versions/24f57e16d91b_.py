@@ -40,6 +40,7 @@ def upgrade() -> None:
             ["product_type.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("name"),
     )
     op.create_index(
         op.f("ix_product_product_type_id"), "product", ["product_type_id"], unique=False

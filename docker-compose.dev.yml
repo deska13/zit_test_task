@@ -7,8 +7,6 @@ services:
   product_api:
     volumes:
       - ${PWD}/src:/app/src
-    ports:
-      - 8000:8000
 
 volumes:
   pgdata:

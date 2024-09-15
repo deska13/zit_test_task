@@ -21,15 +21,15 @@ class ProductTypeRepositry:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def add(self, product_type: ProductTypeIn) -> ProductType:
-        product_type = ProductTypeORM(**product_type.model_dump())
+    async def add(self, product_type_in: ProductTypeIn) -> ProductType:
+        product_type = ProductTypeORM(**product_type_in.model_dump())
         try:
             async with self.session.begin():
                 self.session.add(product_type)
         except IntegrityError as exc:
             if check_already_exists(exc):
                 raise AlredyExistError("Product type already exists") from exc
-            logger.exception("Failed to add product type %s", product_type)
+            logger.exception("Failed to add product type %s", product_type_in)
         await self.session.refresh(product_type)
         return ProductType.model_validate(product_type)
 

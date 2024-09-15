@@ -4,11 +4,13 @@ from typing import Any
 from uuid import UUID
 
 from sqlalchemy import Result, func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from infra.dto import Page, Product, ProductIn
 
 from .exception import NotFoundError
+from .exception.alredy_exist import AlredyExistError, check_already_exists
 from .orm import ProductORM
 from .utils import build_filters
 
@@ -19,10 +21,15 @@ class ProductRepositry:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def add(self, product_type: ProductIn) -> Product:
-        product = ProductORM(**product_type.model_dump())
-        async with self.session.begin():
-            self.session.add(product)
+    async def add(self, product_in: ProductIn) -> Product:
+        product = ProductORM(**product_in.model_dump())
+        try:
+            async with self.session.begin():
+                self.session.add(product)
+        except IntegrityError as exc:
+            if check_already_exists(exc):
+                raise AlredyExistError("Product already exists") from exc
+            logger.exception("Failed to add product %s", product_in)
         await self.session.refresh(product)
         return Product.model_validate(product)
 

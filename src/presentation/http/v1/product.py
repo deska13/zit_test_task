@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from infra.dto import Page, Product, ProductIn
 from presentation.http.v1.queries import ProductFilters
-from repository.exception import NotFoundError
+from repository.exception import AlredyExistError, NotFoundError
 from services import ProductService
 
 from .exception import HTTPErrorModel
@@ -45,6 +45,11 @@ async def create_product(
     except NotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(exc),
+        ) from exc
+    except AlredyExistError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
         ) from exc
 

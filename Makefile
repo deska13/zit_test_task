@@ -15,11 +15,17 @@ build:
 create-network-docker:
 	docker network create back-tier
 
+up:
+	docker compose -f docker-compose.yml up -d
+
 up-dev:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 up-dev-detach:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+stop:
+	docker compose -f docker-compose.yml stop
 
 env-export:
 	export $(cat config/.env) > /dev/null 2>&1

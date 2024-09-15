@@ -24,6 +24,8 @@ services:
       - product_db
     networks:
       - back-tier
+    ports:
+      - 8000:8000
 
 volumes:
   pgdata:
