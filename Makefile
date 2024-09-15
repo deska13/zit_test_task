@@ -4,6 +4,8 @@ install-hooks:
 format-lint:
 	poetry run pre-commit run --all-files
 
+# dev
+
 make-env:
 	cp config/.env.template config/.env
 
@@ -19,6 +21,9 @@ up-dev:
 up-dev-detach:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
+env-export:
+	export $(cat config/.env) > /dev/null 2>&1
+
 version:
 	@poetry version $(v)
 	@git add pyproject.toml
@@ -28,18 +33,17 @@ version:
 	@git push --tags
 	@poetry version
 
-env-export:
-	export $(cat config/.env) > /dev/null 2>&1
+# migrations
 
 makemigration-docker:
-	docker compose exec product_api bash -c 'cd .. && PYTHONPATH=app alembic --config "./alembic.ini" revision --autogenerate'
+	docker compose exec product_api bash -c 'PYTHONPATH=app alembic --config "/app/alembic.ini" upgrade head'
 
 migrate-docker:
-	docker compose exec product_api bash -c 'cd .. && PYTHONPATH=app alembic --config "./alembic.ini" upgrade head'
+	docker compose exec product_api bash -c 'PYTHONPATH=app alembic --config "/app/alembic.ini" upgrade head'
 
 # Tests
 
-schemathesis:
-	poetry run pytest -s tests/schemathesis/
+end_to_end_tests:
+	poetry run pytest -s tests/end_to_end
 
-tests: schemathesis
+tests: end_to_end_tests 

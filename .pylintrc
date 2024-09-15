@@ -12,6 +12,7 @@ ignore-paths =
     temp,
     build,
     src.infra.migration,
+    tests,
 extension-pkg-whitelist=
     pydantic,
     orjson,

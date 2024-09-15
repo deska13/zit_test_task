@@ -8,9 +8,9 @@ class ProductTypeService:
     def __init__(self, repository_uow: SQLAlchemyUnitOfWork):
         self.repository_uow = repository_uow
 
-    async def add(self, product_type: ProductTypeIn) -> ProductType:
+    async def add(self, product_type_in: ProductTypeIn) -> ProductType:
         async with self.repository_uow as repository_uow:
-            return await repository_uow.product_type.add(product_type)
+            return await repository_uow.product_type.add(product_type_in)
 
     async def get_by_filter(self, **kwargs: Any) -> Page[ProductType]:
         async with self.repository_uow as repository_uow:

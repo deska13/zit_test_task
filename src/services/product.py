@@ -1,8 +1,11 @@
+import logging
 from typing import Any
 from uuid import UUID
 
 from infra.dto import Page, Product, ProductIn
 from repository import SQLAlchemyUnitOfWork
+
+logger = logging.getLogger(__name__)
 
 
 class ProductService:
@@ -14,7 +17,9 @@ class ProductService:
             await repository_uow.product_type.get_by_id(
                 product_type_id=product_in.product_type_id,
             )
+        async with self.repository_uow as repository_uow:
             created_product = await repository_uow.product.add(product_in)
+            logger.debug("Created product %s", created_product)
             return created_product
 
     async def get_by_id(self, product_id: UUID) -> Product:

@@ -15,8 +15,7 @@ router = APIRouter()
 
 @router.post(
     path="",
-    summary="Получить продукцию",
-    description="Get all products",
+    summary="Создать тип продукции",
     status_code=status.HTTP_201_CREATED,
     responses={
         status.HTTP_409_CONFLICT: {"model": HTTPErrorModel},
@@ -24,11 +23,24 @@ router = APIRouter()
 )
 @inject
 async def create(
-    product_type: ProductTypeIn,
+    product_type_in: ProductTypeIn,
     product_type_service: FromDishka[ProductTypeService],
 ) -> ProductType:
+    """
+    Создание типа продукции
+
+    Args:
+        product_type_in (ProductTypeIn): данные создаваемого типа продукции
+
+    Returns:
+        ProductType: созданный тип продукции
+
+    Raises:
+        HTTPException: если не удалось создать тип продукции
+            с кодом 409, если тип продукции уже существует
+    """
     try:
-        return await product_type_service.add(product_type)
+        return await product_type_service.add(product_type_in)
     except AlredyExistError as exc:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -38,8 +50,7 @@ async def create(
 
 @router.get(
     path="",
-    summary="Получить продукцию",
-    description="Get all products",
+    summary="Получить список типов продукции",
 )
 @inject
 async def get_product_types(
@@ -48,6 +59,17 @@ async def get_product_types(
     filters: ProductTypeFilters = Depends(),
     product_type_service: FromDishka[ProductTypeService] = Depends(),
 ) -> Page[ProductType]:
+    """
+    Получение списка типов продукции
+
+    Args:
+        count (int): количество типов продукции на странице
+        page (int): номер страницы
+        filters (ProductTypeFilters): фильтры
+
+    Returns:
+        Page[ProductType]: страница с типами продукции
+    """
     return await product_type_service.get_by_filter(
         count=count,
         page=page,

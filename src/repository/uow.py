@@ -26,11 +26,9 @@ class SQLAlchemyUnitOfWork:
     def __init__(self, session_factory: async_sessionmaker) -> None:
         self._session_factory = session_factory
         self.session: AsyncSession | None = None
-        self._is_event_collected = False
         super().__init__()
 
     async def __aenter__(self) -> Self:
-        self._is_event_collected = False
         self.session = self._session_factory()
         if self.session:
             self.product = ProductRepositry(self.session)

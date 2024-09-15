@@ -15,6 +15,7 @@ ARG UID=1000 \
     GID=1000
 
 ENV BUILD_ONLY_PACKAGES='wget' \
+    API_URL='http://localhost:8000' \
     PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONHASHSEED=random \
@@ -68,4 +69,6 @@ CMD ["/scripts/start.sh"]
 
 COPY --chown=web:web ./src /app/src
 
+HEALTHCHECK --interval=30s --timeout=30s --retries=3 --start-period=30s \
+  CMD curl --fail --request GET ${API_URL}/api/v1/healthcheck | grep -q PONG || exit 1
 WORKDIR /app/src

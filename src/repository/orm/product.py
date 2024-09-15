@@ -19,7 +19,7 @@ class ProductORM(Base):
         primary_key=True,
         default=uuid4,
     )
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(nullable=False, unique=True)
     product_type_id: Mapped[UUID] = mapped_column(
         ForeignKey("product_type.id"),
         nullable=True,

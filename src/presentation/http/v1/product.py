@@ -51,14 +51,26 @@ async def create_product(
 
 @router.get(
     path="/{product_id}",
-    summary="Получить продукцию",
-    description="Get all products",
+    summary="Получить продукцию по id",
 )
 @inject
 async def get_product_by_id(
     product_id: UUID,
     product_service: FromDishka[ProductService],
 ) -> Product:
+    """
+    Получение продукции по id
+
+    Args:
+        product_id (UUID): id продукции
+
+    Returns:
+        Product: продукция
+
+    Raises:
+        HTTPException: если не удалось найти продукцию
+            с кодом 404, если не найден тип продукции
+    """
     try:
         return await product_service.get_by_id(product_id=product_id)
     except NotFoundError as exc:
@@ -71,7 +83,6 @@ async def get_product_by_id(
 @router.get(
     path="",
     summary="Получить продукцию",
-    description="Get all products",
 )
 @inject
 async def get_products(
@@ -80,6 +91,17 @@ async def get_products(
     filters: ProductFilters = Depends(),
     product_service: FromDishka[ProductService] = Depends(),
 ) -> Page[Product]:
+    """
+    Получение списка продукции с помощью фильтров
+
+    Args:
+        count (int): количество объектов на странице
+        page (int): номер страницы
+        filters (ProductFilters): фильтры
+
+    Returns:
+        Page[Product]: страница с продукцией
+    """
     products = await product_service.get_products(
         count=count,
         page=page,

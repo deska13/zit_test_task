@@ -13,9 +13,9 @@ def _get_column(entity_type: Any, filter_key: str) -> Any:
     return column
 
 
-def build_filters(table: Any, **filter: Any) -> list[Any]:
+def build_filters(table: Any, **kwargs: Any) -> list[Any]:
     filters = []
-    for key, value in filter.items():
+    for key, value in kwargs.items():
         if value is None:
             pass
         elif key.startswith("from_"):

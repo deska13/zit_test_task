@@ -4,7 +4,7 @@ import re
 from pydantic import AfterValidator, StringConstraints
 from typing_extensions import Annotated
 
-MIN_LENGTH = 0
+MIN_LENGTH = 1
 MAX_LENGTH = 256
 
 

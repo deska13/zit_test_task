@@ -4,10 +4,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class PostgresSettings(BaseSettings):
     host: str
-    port: int
-    user: str
-    password: str
-    db: str
+    port: int = 5432
+    user: str = "postgres"
+    password: str = "postgres"
+    db: str = "postgres"
     scheme: str = "postgresql+asyncpg"
 
     @property
