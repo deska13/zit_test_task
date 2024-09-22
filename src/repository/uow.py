@@ -47,7 +47,7 @@ class SQLAlchemyUnitOfWork:
             if exc_type is not None and exc is not None and traceback is not None:
                 exc_info = (exc_type, exc, traceback)
             logger.error("An error occurred during transaction", exc_info=exc_info)
-        await self.rollback()
+            await self.rollback()
         if self.session is not None:
             await self.session.close()
         self.session = None

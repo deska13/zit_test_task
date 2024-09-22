@@ -42,7 +42,7 @@ version:
 # migrations
 
 makemigration-docker:
-	docker compose exec product_api bash -c 'PYTHONPATH=app alembic --config "/app/alembic.ini" upgrade head'
+	docker compose exec product_api bash -c 'PYTHONPATH=app alembic --config "/app/alembic.ini" revision --autogenerate'
 
 migrate-docker:
 	docker compose exec product_api bash -c 'PYTHONPATH=app alembic --config "/app/alembic.ini" upgrade head'
